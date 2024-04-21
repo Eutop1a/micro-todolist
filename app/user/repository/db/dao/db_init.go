@@ -24,7 +24,7 @@ func InitDB() {
 	database := config.DbName
 	password := config.DbPassword
 	charset := config.Charset
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s%s", user, password, host, port, database, charset)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s", user, password, host, port, database, charset)
 	fmt.Println(dsn)
 	err := Database(dsn)
 	if err != nil {
