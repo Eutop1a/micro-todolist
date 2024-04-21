@@ -1,0 +1,40 @@
+version: "3.7"
+
+networks:
+  todolist:
+    driver: bridge
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=todolist
+      - MYSQL_USER=todolist
+      - MYSQL_PASSWORD=todolist
+      - TZ = Asia/Shanghai
+    ports:
+      - "3308:3306"
+    networks:
+      - todolist
+  etcd:
+    container_name: etcd
+    image: "quay.io/coreos/etcd:v3.5.5"
+    restart: on-failure
+    privileged: true
+    environment:
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_API=3
+      - ETCD_CERT_FILE="/path/to/server.crt"
+      - ETCD_KEY_FILE="/path/to/server.key"
+      - ETCD_AUTH="simple"
+      - ETCD_AUTH_USER="todolist"
+      - ETCD_AUTH_PASSWORD="todolist"
+    ports:
+      - "2379:2379"
+    networks:
+      - todolist
