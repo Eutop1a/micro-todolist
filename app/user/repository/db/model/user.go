@@ -12,7 +12,9 @@ type User struct {
 	Password string
 }
 
-const PasswordCost = 12
+const (
+	PasswordCost = 12
+)
 
 func (user *User) SetPassword(password string) (err error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), PasswordCost)
@@ -20,7 +22,7 @@ func (user *User) SetPassword(password string) (err error) {
 		return
 	}
 	user.Password = string(bytes)
-	return
+	return nil
 }
 
 func (user *User) CheckPassword(password string) bool {

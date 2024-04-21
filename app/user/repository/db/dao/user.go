@@ -22,10 +22,13 @@ func NewUserDao(ctx context.Context) *UserDao {
 
 func (dao *UserDao) FindUserByUserName(userName string) (r *model.User, err error) {
 	err = dao.Model(&model.User{}).
-		Where("username = ?", userName).Find(&r).Error
+		Where("user_name = ?", userName).Find(&r).Error
 	// find 不报： record not found
 	// First: SELECT * FROM user WHERE user_name = xxx ORDER BY id LIMIT 1;
 	// Find: SELECT * FROM user WHERE user_name = xxx;
+	if err != nil {
+		return
+	}
 	return
 }
 
