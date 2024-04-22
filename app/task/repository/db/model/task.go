@@ -6,8 +6,8 @@ type Task struct {
 	gorm.Model
 	Uid       uint   `gorm:"not null"`
 	Title     string `json:"title"`
-	Status    string `gorm:"default:0"`
 	Content   string `gorm:"type:longtext"`
+	Status    int    `gorm:"default:0"`
 	StartTime int64
 	EndTime   int64
 }

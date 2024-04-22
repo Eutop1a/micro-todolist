@@ -7,16 +7,24 @@ import (
 )
 
 var (
-	DbHost             string
-	DbPort             string
-	DbUser             string
-	DbPassword         string
-	DbName             string
-	Charset            string
-	EtcdHost           string
-	EtcdPort           string
+	DbHost     string
+	DbPort     string
+	DbUser     string
+	DbPassword string
+	DbName     string
+	Charset    string
+
+	EtcdHost string
+	EtcdPort string
+
 	UserServiceAddress string
-	TestServiceAddress string
+	TaskServiceAddress string
+
+	RabbitMQ         string
+	RabbitMQUser     string
+	RabbitMQPassword string
+	RabbitMQHost     string
+	RabbitMQPort     string
 )
 
 func Init() {
@@ -27,15 +35,24 @@ func Init() {
 	LoadMySqlData(file)
 	LoadEtcd(file)
 	LoadServer(file)
+	LoadRabbitMq(file)
 }
 func LoadEtcd(file *ini.File) {
 	EtcdHost = file.Section("etcd").Key("EtcdHost").String()
 	EtcdPort = file.Section("etcd").Key("EtcdPort").String()
 
 }
+func LoadRabbitMq(file *ini.File) {
+	RabbitMQ = file.Section("rabbitmq").Key("RabbitMQ").String()
+	RabbitMQUser = file.Section("rabbitmq").Key("RabbitMQUser").String()
+	RabbitMQPassword = file.Section("rabbitmq").Key("RabbitMQPassword").String()
+	RabbitMQHost = file.Section("rabbitmq").Key("RabbitMQHost").String()
+	RabbitMQPort = file.Section("rabbitmq").Key("RabbitMQPort").String()
+
+}
 func LoadServer(file *ini.File) {
 	UserServiceAddress = file.Section("server").Key("UserServiceAddress").String()
-	TestServiceAddress = file.Section("server").Key("TestServiceAddress").String()
+	TaskServiceAddress = file.Section("server").Key("TestServiceAddress").String()
 
 }
 func LoadMySqlData(file *ini.File) {

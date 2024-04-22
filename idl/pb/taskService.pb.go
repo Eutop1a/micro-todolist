@@ -26,23 +26,23 @@ type TaskModel struct {
 	unknownFields protoimpl.UnknownFields
 
 	// @inject_tag: json:"id" form:"id"
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" form:"id"`
 	// @inject_tag: json:"uid" form:"uid"
-	Uid uint64 `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	Uid uint64 `protobuf:"varint,2,opt,name=uid,proto3" json:"uid" form:"uid"`
 	// @inject_tag: json:"title" form:"title"
-	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title" form:"title"`
 	// @inject_tag: json:"content" form:"content"
-	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" form:"content"`
 	// @inject_tag: json:"start_time" form:"start_time"
-	StartTime int64 `protobuf:"varint,5,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	StartTime int64 `protobuf:"varint,5,opt,name=start_time,json=startTime,proto3" json:"start_time" form:"start_time"`
 	// @inject_tag: json:"end_time" form:"end_time"
-	EndTime int64 `protobuf:"varint,6,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	EndTime int64 `protobuf:"varint,6,opt,name=end_time,json=endTime,proto3" json:"end_time" form:"end_time"`
 	// @inject_tag: json:"status" form:"status"
-	Status int64 `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
+	Status int64 `protobuf:"varint,7,opt,name=status,proto3" json:"status" form:"status"`
 	// @inject_tag: json:"create_time" form:"create_time"
-	CreateTime int64 `protobuf:"varint,8,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	CreateTime int64 `protobuf:"varint,8,opt,name=create_time,json=createTime,proto3" json:"create_time" form:"create_time"`
 	// @inject_tag: json:"update_time" form:"update_time"
-	UpdateTime int64 `protobuf:"varint,9,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	UpdateTime int64 `protobuf:"varint,9,opt,name=update_time,json=updateTime,proto3" json:"update_time" form:"update_time"`
 }
 
 func (x *TaskModel) Reset() {
@@ -146,23 +146,23 @@ type TaskRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// @inject_tag: json:"id" form:"id"
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" form:"id"`
 	// @inject_tag: json:"uid" form:"uid"
-	Uid uint64 `protobuf:"varint,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	Uid uint64 `protobuf:"varint,2,opt,name=uid,proto3" json:"uid" form:"uid"`
 	// @inject_tag: json:"title" form:"title"
-	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Title string `protobuf:"bytes,3,opt,name=title,proto3" json:"title" form:"title"`
 	// @inject_tag: json:"content" form:"content"
-	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content" form:"content"`
 	// @inject_tag: json:"start_time" form:"start_time"
-	StartTime int64 `protobuf:"varint,5,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
+	StartTime int64 `protobuf:"varint,5,opt,name=start_time,json=startTime,proto3" json:"start_time" form:"start_time"`
 	// @inject_tag: json:"end_time" form:"end_time"
-	EndTime int64 `protobuf:"varint,6,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
+	EndTime int64 `protobuf:"varint,6,opt,name=end_time,json=endTime,proto3" json:"end_time" form:"end_time"`
 	// @inject_tag: json:"status" form:"status"
-	Status int64 `protobuf:"varint,7,opt,name=status,proto3" json:"status,omitempty"`
+	Status int64 `protobuf:"varint,7,opt,name=status,proto3" json:"status" form:"status"`
 	// @inject_tag: json:"start" form:"start"
-	Start int64 `protobuf:"varint,8,opt,name=start,proto3" json:"start,omitempty"`
+	Start int64 `protobuf:"varint,8,opt,name=start,proto3" json:"start" form:"start"`
 	// @inject_tag: json:"limit" form:"limit"
-	Limit int64 `protobuf:"varint,9,opt,name=limit,proto3" json:"limit,omitempty"`
+	Limit int64 `protobuf:"varint,9,opt,name=limit,proto3" json:"limit" form:"limit"`
 }
 
 func (x *TaskRequest) Reset() {
@@ -266,11 +266,11 @@ type TaskListResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	// @inject_tag: json:"task_list" form:"task_list"
-	TaskList []*TaskModel `protobuf:"bytes,1,rep,name=task_list,json=taskList,proto3" json:"task_list,omitempty"`
+	TaskList []*TaskModel `protobuf:"bytes,1,rep,name=task_list,json=taskList,proto3" json:"task_list" form:"task_list"`
 	// @inject_tag: json:"count" form:"count"
-	Count uint32 `protobuf:"varint,2,opt,name=count,proto3" json:"count,omitempty"`
+	Count uint32 `protobuf:"varint,2,opt,name=count,proto3" json:"count" form:"count"`
 	// @inject_tag: json:"code" form:"code"
-	Code uint32 `protobuf:"varint,3,opt,name=code,proto3" json:"code,omitempty"`
+	Code uint32 `protobuf:"varint,3,opt,name=code,proto3" json:"code" form:"code"`
 }
 
 func (x *TaskListResponse) Reset() {
@@ -332,9 +332,9 @@ type TaskDetailResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	// @inject_tag: json:"task_detail" form:"task_detail"
-	TaskDetail *TaskModel `protobuf:"bytes,1,opt,name=task_detail,json=taskDetail,proto3" json:"task_detail,omitempty"`
+	TaskDetail *TaskModel `protobuf:"bytes,1,opt,name=task_detail,json=taskDetail,proto3" json:"task_detail" form:"task_detail"`
 	// @inject_tag: json:"code" form:"code"
-	Code uint32 `protobuf:"varint,2,opt,name=code,proto3" json:"code,omitempty"`
+	Code uint32 `protobuf:"varint,2,opt,name=code,proto3" json:"code" form:"code"`
 }
 
 func (x *TaskDetailResponse) Reset() {
