@@ -5,7 +5,7 @@ import (
 	"todo_list/app/gateway/rpc"
 	"todo_list/idl/pb"
 	"todo_list/pkg/ctl"
-	"todo_list/pkg/jwt"
+	"todo_list/pkg/utils"
 	"todo_list/types"
 
 	"github.com/gin-gonic/gin"
@@ -24,19 +24,21 @@ func UserRegisterHandler(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, ctl.RespSuccess(ctx, userResp))
 }
+
+// UserLoginHandler 用户登录
 func UserLoginHandler(ctx *gin.Context) {
 	var req pb.UserRequest
-	if err := ctx.ShouldBind(&req); err != nil {
+	if err := ctx.Bind(&req); err != nil {
 		ctx.JSON(http.StatusOK, ctl.RespError(ctx, err, "UserLoginHandler-ShouldBind"))
 		return
 	}
-	userResp, err := rpc.UserRegister(ctx, &req)
+	userResp, err := rpc.UserLogin(ctx, &req)
 	if err != nil {
 		ctx.JSON(http.StatusOK, ctl.RespError(ctx, err, "UserLoginHandler-UserRegister-RPC"))
 		return
 	}
 
-	token, err := jwt.GenerateToken(uint(userResp.UserDetail.Id))
+	token, err := utils.GenerateToken(uint(userResp.UserDetail.Id))
 	if err != nil {
 		ctx.JSON(http.StatusOK, ctl.RespError(ctx, err, "UserLoginHandler-GenerateToken"))
 		return

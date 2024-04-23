@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"fmt"
+	"time"
 	"todo_list/config"
 
 	"gorm.io/gorm/schema"
@@ -24,7 +25,7 @@ func InitDB() {
 	database := config.DbName
 	password := config.DbPassword
 	charset := config.Charset
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s", user, password, host, port, database, charset)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s&parseTime=true", user, password, host, port, database, charset)
 	fmt.Println(dsn)
 	err := Database(dsn)
 	if err != nil {
@@ -51,7 +52,10 @@ func Database(connString string) error {
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	sqlDB, _ := db.DB()
+	sqlDB.SetMaxIdleConns(20)
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetConnMaxLifetime(time.Second * 30)
 	_db = db
 
 	migration()

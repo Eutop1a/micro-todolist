@@ -21,6 +21,6 @@ func SendMessage2MQ(body []byte) (err error) {
 	if err != nil {
 		return
 	}
-	fmt.Println("发送MQ成功")
+	fmt.Println("发送MQ成功...")
 	return
 }

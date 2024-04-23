@@ -17,8 +17,10 @@ func InitRabbitMQ() {
 		config.RabbitMQHost,
 		config.RabbitMQPort)
 	fmt.Println(connString)
+
 	conn, err := amqp.Dial(connString)
 	if err != nil {
-		RabbitMq = conn
+		panic(err)
 	}
+	RabbitMq = conn
 }
