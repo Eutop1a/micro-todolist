@@ -9,7 +9,9 @@ import (
 	"todo_list/app/task/service"
 	"todo_list/config"
 	"todo_list/idl/pb"
+	log "todo_list/pkg/logger"
 
+	"github.com/go-micro/plugins/v4/registry/etcd"
 	"go-micro.dev/v4"
 
 	"go-micro.dev/v4/registry"
@@ -19,12 +21,13 @@ func main() {
 	config.Init()
 	dao.InitDB()
 	mq.InitRabbitMQ()
+	log.InitLog()
 
 	// 启动一些脚本
 	loadingScript()
 
 	// etcd 注册
-	etcdReg := registry.NewRegistry(
+	etcdReg := etcd.NewRegistry(
 		registry.Addrs(fmt.Sprintf("%s:%s", config.EtcdHost, config.EtcdPort)),
 	)
 

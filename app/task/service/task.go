@@ -9,6 +9,7 @@ import (
 	"todo_list/app/task/repository/mq"
 	"todo_list/idl/pb"
 	"todo_list/pkg/e"
+	log "todo_list/pkg/logger"
 )
 
 var TaskSrvIns *TaskSrv
@@ -25,19 +26,20 @@ func GetTaskSrv() *TaskSrv {
 	return TaskSrvIns
 }
 
-// CreateTask create task 送到mq, mq --> 落库，
+// CreateTask 创建备忘录，将备忘录信息生产，放到rabbitMQ消息队列中
+// create task 送到mq, mq --> 落库，
 func (t *TaskSrv) CreateTask(ctx context.Context, req *pb.TaskRequest, resp *pb.TaskDetailResponse) (err error) {
 	body, _ := json.Marshal(req)
-	resp.Code = e.Success
+	resp.Code = e.SUCCESS
 	err = mq.SendMessage2MQ(body)
 	if err != nil {
-		resp.Code = e.Error
+		resp.Code = e.ERROR
 		return
 	}
 	return
 }
 
-func TaskMQ2DB(ctx context.Context, req *pb.TaskRequest) error {
+func TaskMQ2MySQL(ctx context.Context, req *pb.TaskRequest) error {
 	m := &model.Task{
 		Uid:       uint(req.Uid),
 		Title:     req.Title,
@@ -49,14 +51,16 @@ func TaskMQ2DB(ctx context.Context, req *pb.TaskRequest) error {
 	return dao.NewTaskDao(ctx).CreateTask(m)
 }
 
+// GetTasksList 实现备忘录服务接口 获取备忘录列表
 func (t *TaskSrv) GetTasksList(ctx context.Context, req *pb.TaskRequest, resp *pb.TaskListResponse) (err error) {
-	resp.Code = e.Success
+	resp.Code = e.SUCCESS
 	if req.Limit == 0 {
 		req.Limit = 10
 	}
 	r, count, err := dao.NewTaskDao(ctx).ListTaskByUserId(req.Uid, int(req.StartTime), int(req.Limit))
 	if err != nil {
-		resp.Code = e.Error
+		resp.Code = e.ERROR
+		log.LogrusObj.Error("ListTaskByUserId err:%v", err)
 		return
 	}
 	var taskRes []*pb.TaskModel
@@ -70,36 +74,41 @@ func (t *TaskSrv) GetTasksList(ctx context.Context, req *pb.TaskRequest, resp *p
 }
 
 func (t *TaskSrv) GetTask(ctx context.Context, req *pb.TaskRequest, resp *pb.TaskDetailResponse) (err error) {
-	resp.Code = e.Success
+	resp.Code = e.SUCCESS
 	r, err := dao.NewTaskDao(ctx).GetTaskByTaskIdAndUserId(req.Id, req.Uid)
-	if r.ID == 0 || err != nil {
-		resp.Code = e.Error
+	if err != nil {
+		resp.Code = e.ERROR
+		log.LogrusObj.Error("GetTask err:%v", err)
 		return
 	}
-	resp.TaskDetail = BuildTask(r)
-
+	taskRes := BuildTask(r)
+	resp.TaskDetail = taskRes
 	return
 }
 
+// UpdateTask 修改备忘录
 func (t *TaskSrv) UpdateTask(ctx context.Context, req *pb.TaskRequest, resp *pb.TaskDetailResponse) (err error) {
-	resp.Code = e.Success
-	err = dao.NewTaskDao(ctx).UpdateTask(req)
+	// 查找该用户的这条信息
+	resp.Code = e.SUCCESS
+	taskData, err := dao.NewTaskDao(ctx).UpdateTask(req)
 	if err != nil {
-		resp.Code = e.Error
+		resp.Code = e.ERROR
+		log.LogrusObj.Error("UpdateTask err:%v", err)
 		return
 	}
-
+	resp.TaskDetail = BuildTask(taskData)
 	return
 }
 
+// DeleteTask 删除备忘录
 func (t *TaskSrv) DeleteTask(ctx context.Context, req *pb.TaskRequest, resp *pb.TaskDetailResponse) (err error) {
-	resp.Code = e.Success
-	err = dao.NewTaskDao(ctx).DeleteTaskByTaskIdAndUserId(req.Id, req.Uid)
+	resp.Code = e.SUCCESS
+	err = dao.NewTaskDao(ctx).DeleteTaskByIdAndUserId(req.Id, req.Uid)
 	if err != nil {
-		resp.Code = e.Error
+		resp.Code = e.ERROR
+		log.LogrusObj.Error("DeleteTask err:%v", err)
 		return
 	}
-
 	return
 }
 

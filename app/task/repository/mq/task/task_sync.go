@@ -7,6 +7,7 @@ import (
 	"todo_list/app/task/service"
 	"todo_list/consts"
 	"todo_list/idl/pb"
+	log "todo_list/pkg/logger"
 )
 
 type SyncTask struct {
@@ -20,22 +21,29 @@ func (s *SyncTask) RunTaskService(ctx context.Context) (err error) {
 	}
 	//var forever = make(chan struct{})
 	var forever chan struct{}
+
 	go func() {
 
 		for d := range msgs {
+			log.LogrusObj.Infof("Received run Task: %s", d.Body)
+
 			// 落库
 			req := new(pb.TaskRequest)
 			err = json.Unmarshal(d.Body, req)
 			if err != nil {
-				return
+				log.LogrusObj.Infof("Received run Task: %s", err)
+				//return
 			}
-			err = service.TaskMQ2DB(ctx, req)
+			err = service.TaskMQ2MySQL(ctx, req)
 			if err != nil {
-				return
+				log.LogrusObj.Infof("Received run Task: %s", err)
+				//return
 			}
 			d.Ack(false)
 		}
 	}()
+
+	log.LogrusObj.Infoln(err)
 	<-forever
 	return nil
 }

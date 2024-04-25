@@ -2,3 +2,7 @@
 go.sum
 *.exe
 *.dll
+
+config/mysql
+logs
+

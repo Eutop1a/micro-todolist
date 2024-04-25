@@ -13,9 +13,10 @@ type User struct {
 }
 
 const (
-	PasswordCost = 12
+	PasswordCost = 12 // 密码加密难度
 )
 
+// SetPassword 加密密码
 func (user *User) SetPassword(password string) (err error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), PasswordCost)
 	if err != nil {
@@ -25,6 +26,7 @@ func (user *User) SetPassword(password string) (err error) {
 	return nil
 }
 
+// CheckPassword 校验密码
 func (user *User) CheckPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	return err == nil

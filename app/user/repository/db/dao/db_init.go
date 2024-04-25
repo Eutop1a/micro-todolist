@@ -3,7 +3,11 @@ package dao
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
 	"todo_list/config"
+
+	"github.com/gin-gonic/gin"
 
 	"gorm.io/gorm/schema"
 
@@ -20,11 +24,11 @@ var _db *gorm.DB
 func InitDB() {
 	host := config.DbHost
 	port := config.DbPort
-	user := config.DbUser
+	username := config.DbUser
 	database := config.DbName
 	password := config.DbPassword
 	charset := config.Charset
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s", user, password, host, port, database, charset)
+	dsn := strings.Join([]string{username, ":", password, "@tcp(", host, ":", port, ")/", database, "?charset=" + charset + "&parseTime=true"}, "")
 	fmt.Println(dsn)
 	err := Database(dsn)
 	if err != nil {
@@ -34,7 +38,12 @@ func InitDB() {
 }
 
 func Database(connString string) error {
-	var ormLogger logger.Interface = logger.Default.LogMode(logger.Info)
+	var ormLogger logger.Interface
+	if gin.Mode() == "debug" {
+		ormLogger = logger.Default.LogMode(logger.Info)
+	} else {
+		ormLogger = logger.Default
+	}
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       connString, // dsn data source name
 		DefaultStringSize:         256,        // string 类型字段的默认长度
@@ -49,11 +58,13 @@ func Database(connString string) error {
 		},
 	})
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-
+	sqlDB, _ := db.DB()
+	sqlDB.SetMaxIdleConns(20)
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetConnMaxLifetime(time.Second * 30)
 	_db = db
-
 	migration()
 
 	return err

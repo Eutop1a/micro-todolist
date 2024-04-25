@@ -24,15 +24,23 @@ services:
       - ./config/mysql:/var/lib/mysql
       - ./logs/mysql/log:/var/log/mysql
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5673:5672"
-      - "15673:15672"
+  etcd:
+    container_name: etcd
+    image: "quay.io/coreos/etcd:v3.5.5"
+    restart: on-failure
+    privileged: true
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
+      - "ALLOW_NONE_AUTHENTICATION=yes"
+      - ETCD_API=3
+      - ETCD_CERT_FILE="/path/to/server.crt"
+      - ETCD_KEY_FILE="/path/to/server.key"
+      - ETCD_AUTH="simple"
+      - ETCD_AUTH_USER="todolist"
+      - ETCD_AUTH_PASSWORD="todolist"
+    ports:
+      - "2380:2379"
     networks:
       - todolist
 
@@ -51,23 +59,15 @@ services:
     networks:
       - todolist
 
-  etcd:
-    container_name: etcd
-    image: "quay.io/coreos/etcd:v3.5.5"
-    restart: on-failure
-    privileged: true
-    environment:
-      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
-      - "ALLOW_NONE_AUTHENTICATION=yes"
-      - ETCD_API=3
-      - ETCD_CERT_FILE="/path/to/server.crt"
-      - ETCD_KEY_FILE="/path/to/server.key"
-      - ETCD_AUTH="simple"
-      - ETCD_AUTH_USER="todolist"
-      - ETCD_AUTH_PASSWORD="todolist"
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
-      - "2380:2379"
+      - "5673:5672" # AMQP 端口
+      - "15673:15672"  # 管理界面端口
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest # 设置 RabbitMQ 默认用户名
+      - RABBITMQ_DEFAULT_PASS=guest # 设置 RabbitMQ 默认密码
     networks:
       - todolist
 

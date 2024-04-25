@@ -60,7 +60,7 @@ func LoadRabbitMq(file *ini.File) {
 
 func LoadServer(file *ini.File) {
 	UserServiceAddress = file.Section("server").Key("UserServiceAddress").String()
-	TaskServiceAddress = file.Section("server").Key("TestServiceAddress").String()
+	TaskServiceAddress = file.Section("server").Key("TaskServiceAddress").String()
 }
 
 func LoadMySqlData(file *ini.File) {
